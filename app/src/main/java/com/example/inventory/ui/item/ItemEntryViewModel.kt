@@ -20,14 +20,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
+import javax.inject.Inject
 
 /**
  * ViewModel to validate and insert items in the Room database.
  */
-class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewModel() {
+@HiltViewModel
+class ItemEntryViewModel @Inject constructor(
+    private val itemsRepository: ItemsRepository
+) : ViewModel() {
 
     /**
      * Holds current item ui state
@@ -47,7 +54,7 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
     /**
      * Inserts an [Item] in the Room database
      */
-    suspend fun saveItem() {
+    fun saveItem() = viewModelScope.launch{
         if (validateInput()) {
             itemsRepository.insertItem(itemUiState.itemDetails.toItem())
         }

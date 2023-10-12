@@ -16,16 +16,38 @@
 
 package com.example.inventory.data
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OfflineItemsRepository(private val itemDao: ItemDao) : ItemsRepository {
+@OptIn(DelicateCoroutinesApi::class)
+class OfflineItemsRepository(
+    private val itemDao: ItemDao,
+    private val externalScope: CoroutineScope,
+    private val dispatcher: CoroutineDispatcher
+) : ItemsRepository {
+
+    @Inject
+    constructor(itemDao: ItemDao) : this(itemDao, GlobalScope, Dispatchers.IO)
+
     override fun getAllItemsStream(): Flow<List<Item>> = itemDao.getAllItems()
 
     override fun getItemStream(id: Int): Flow<Item?> = itemDao.getItem(id)
 
-    override suspend fun insertItem(item: Item) = itemDao.insert(item)
+    override suspend fun insertItem(item: Item) {
+        externalScope.launch(dispatcher) { itemDao.insert(item) }.join()
+    }
 
-    override suspend fun deleteItem(item: Item) = itemDao.delete(item)
+    override suspend fun deleteItem(item: Item) {
+        externalScope.launch(dispatcher) { itemDao.delete(item) }.join()
+    }
 
-    override suspend fun updateItem(item: Item) = itemDao.update(item)
+    override suspend fun updateItem(item: Item) {
+        externalScope.launch(dispatcher) { itemDao.update(item) }.join()
+    }
 }
