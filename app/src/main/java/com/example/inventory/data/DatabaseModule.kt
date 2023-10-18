@@ -1,6 +1,7 @@
 package com.example.inventory.data
 
 import android.content.Context
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,9 @@ object DatabaseModule {
     @Provides
     fun inventoryDatabase(
         @ApplicationContext context: Context
-    ): InventoryDatabase = InventoryDatabase.getDatabase(context)
+    ): InventoryDatabase = Room.databaseBuilder(context, InventoryDatabase::class.java, "item_database")
+        .fallbackToDestructiveMigration()
+        .build()
 
     @Singleton
     @Provides
