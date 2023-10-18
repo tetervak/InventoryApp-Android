@@ -53,15 +53,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
 import com.example.inventory.data.Item
-import com.example.inventory.ui.navigation.NavigationDestination
+import com.example.inventory.ui.navigation.ItemDetailsDestination
 import com.example.inventory.ui.theme.InventoryTheme
-
-object ItemDetailsDestination : NavigationDestination {
-    override val route = "item_details"
-    override val titleRes = R.string.item_detail_title
-    const val itemIdArg = "itemId"
-    val routeWithArgs = "$route/{$itemIdArg}"
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
