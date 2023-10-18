@@ -67,14 +67,6 @@ class ItemEntryViewModel @Inject constructor(
     }
 }
 
-/**
- * Represents Ui State for an Item.
- */
-data class ItemUiState(
-    val itemDetails: ItemDetails = ItemDetails(),
-    val isEntryValid: Boolean = false
-)
-
 data class ItemDetails(
     val id: Int = 0,
     val name: String = "",
