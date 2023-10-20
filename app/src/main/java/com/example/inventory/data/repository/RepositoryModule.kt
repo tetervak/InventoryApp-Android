@@ -1,4 +1,4 @@
-package com.example.inventory.data
+package com.example.inventory.data.repository
 
 import dagger.Binds
 import dagger.Module

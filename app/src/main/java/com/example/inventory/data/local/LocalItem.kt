@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory.data
+package com.example.inventory.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -23,7 +23,7 @@ import androidx.room.PrimaryKey
  * Entity data class represents a single row in the database.
  */
 @Entity(tableName = "items")
-data class Item(
+data class LocalItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,

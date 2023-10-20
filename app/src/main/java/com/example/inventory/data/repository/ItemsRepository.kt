@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.inventory.data
+package com.example.inventory.data.repository
 
+import com.example.inventory.domain.Item
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Repository that provides insert, update, delete, and retrieve of [Item] from a given data source.
- */
 interface ItemsRepository {
     /**
      * Retrieve all the items from the the given data source.
@@ -42,8 +40,14 @@ interface ItemsRepository {
      */
     suspend fun deleteItem(item: Item)
 
+    suspend fun deleteItemById(id: Int)
+
     /**
      * Update item in the data source
      */
     suspend fun updateItem(item: Item)
+
+    suspend fun updateItemQuantity(id: Int, quantity: Int)
+
+
 }

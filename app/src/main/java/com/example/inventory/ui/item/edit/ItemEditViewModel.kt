@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory.ui.item
+package com.example.inventory.ui.item.edit
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +22,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.inventory.data.ItemsRepository
+import com.example.inventory.data.repository.ItemsRepository
+import com.example.inventory.ui.model.ItemFormModel
+import com.example.inventory.ui.item.form.ItemFormUiState
+import com.example.inventory.ui.item.form.toItemFormUiState
 import com.example.inventory.ui.navigation.ItemEditDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
@@ -42,17 +45,17 @@ class ItemEditViewModel @Inject constructor(
     /**
      * Holds current item ui state
      */
-    var itemUiState by mutableStateOf(ItemUiState())
+    var uiState: ItemFormUiState by mutableStateOf(ItemFormUiState())
         private set
 
     private val itemId: Int = checkNotNull(savedStateHandle[ItemEditDestination.itemIdArg])
 
     init {
         viewModelScope.launch {
-            itemUiState = itemsRepository.getItemStream(itemId)
+            uiState = itemsRepository.getItemStream(itemId)
                 .filterNotNull()
                 .first()
-                .toItemUiState(true)
+                .toItemFormUiState(isEntryValid = true)
         }
     }
 
@@ -60,23 +63,21 @@ class ItemEditViewModel @Inject constructor(
      * Update the item in the [ItemsRepository]'s data source
      */
     fun updateItem() = viewModelScope.launch {
-        if (validateInput(itemUiState.itemDetails)) {
-            itemsRepository.updateItem(itemUiState.itemDetails.toItem())
+        val formData: ItemFormModel = uiState.itemFormModel
+        if (formData.isValid()) {
+            itemsRepository.updateItem(formData.toItem())
         }
     }
 
     /**
-     * Updates the [itemUiState] with the value provided in the argument. This method also triggers
+     * Updates the [uiState] with the value provided in the argument. This method also triggers
      * a validation for input values.
      */
-    fun updateUiState(itemDetails: ItemDetails) {
-        itemUiState =
-            ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
-    }
-
-    private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
-        return with(uiState) {
-            name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
-        }
+    fun updateUiState(itemFormModel: ItemFormModel) {
+        uiState =
+            ItemFormUiState(
+                itemFormModel = itemFormModel,
+                isEntryValid = itemFormModel.isValid()
+            )
     }
 }

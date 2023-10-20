@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory.ui.item
+package com.example.inventory.ui.item.edit
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.inventory.InventoryTopAppBar
+import com.example.inventory.ui.item.form.ItemFormBody
 import com.example.inventory.ui.navigation.ItemEditDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,8 +44,8 @@ fun ItemEditScreen(
         },
         modifier = modifier
     ) { innerPadding ->
-        ItemEntryBody(
-            itemUiState = viewModel.itemUiState,
+        ItemFormBody(
+            itemFormUiState = viewModel.uiState,
             onItemValueChange = viewModel::updateUiState,
             onSaveClick = {
                 viewModel.updateItem()

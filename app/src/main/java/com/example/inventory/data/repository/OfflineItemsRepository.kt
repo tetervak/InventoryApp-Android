@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package com.example.inventory.data
+package com.example.inventory.data.repository
 
+import com.example.inventory.data.local.ItemDao
+import com.example.inventory.data.local.LocalItem
+import com.example.inventory.domain.Item
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,19 +39,43 @@ class OfflineItemsRepository(
     @Inject
     constructor(itemDao: ItemDao) : this(itemDao, GlobalScope, Dispatchers.IO)
 
-    override fun getAllItemsStream(): Flow<List<Item>> = itemDao.getAllItems()
+    override fun getAllItemsStream(): Flow<List<Item>> =
+        itemDao.getAllItemsStream().map{ list -> list.map { localItem ->  localItem.toItem() }}
 
-    override fun getItemStream(id: Int): Flow<Item?> = itemDao.getItem(id)
+    override fun getItemStream(id: Int): Flow<Item?> =
+        itemDao.getItemStream(id).map { localItem -> localItem?.toItem() }
 
     override suspend fun insertItem(item: Item) {
-        externalScope.launch(dispatcher) { itemDao.insert(item) }.join()
+        externalScope.launch(dispatcher) { itemDao.insertItem(item.toLocalItem()) }.join()
     }
 
     override suspend fun deleteItem(item: Item) {
-        externalScope.launch(dispatcher) { itemDao.delete(item) }.join()
+        externalScope.launch(dispatcher) { itemDao.deleteItem(item.toLocalItem()) }.join()
+    }
+
+    override suspend fun deleteItemById(id: Int){
+        externalScope.launch(dispatcher) { itemDao.deleteItemById(id) }.join()
     }
 
     override suspend fun updateItem(item: Item) {
-        externalScope.launch(dispatcher) { itemDao.update(item) }.join()
+        externalScope.launch(dispatcher) { itemDao.updateItem(item.toLocalItem()) }.join()
+    }
+
+    override suspend fun updateItemQuantity(id: Int, quantity: Int) {
+        externalScope.launch(dispatcher) { itemDao.updateItemQuantity(id, quantity) }.join()
     }
 }
+
+fun LocalItem.toItem(): Item = Item(
+    id = this.id,
+    name = this.name,
+    price = this.price,
+    quantity = this.quantity
+)
+
+fun Item.toLocalItem(): LocalItem = LocalItem(
+    id = this.id,
+    name = this.name,
+    price = this.price,
+    quantity = this.quantity
+)

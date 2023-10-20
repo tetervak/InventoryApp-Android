@@ -18,8 +18,8 @@ package com.example.inventory.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.inventory.data.Item
-import com.example.inventory.data.ItemsRepository
+import com.example.inventory.data.repository.ItemsRepository
+import com.example.inventory.ui.model.toItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,7 +40,8 @@ class HomeViewModel @Inject constructor(
      * [HomeUiState]
      */
     val homeUiState: StateFlow<HomeUiState> =
-        itemsRepository.getAllItemsStream().map { HomeUiState(it) }
+        itemsRepository.getAllItemsStream()
+            .map { list -> HomeUiState(list.map { item -> item.toItemModel() }) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -52,7 +53,3 @@ class HomeViewModel @Inject constructor(
     }
 }
 
-/**
- * Ui State for HomeScreen
- */
-data class HomeUiState(val itemList: List<Item> = listOf())

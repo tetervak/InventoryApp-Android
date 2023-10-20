@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory.ui.item
+package com.example.inventory.ui.item.details
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +52,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
-import com.example.inventory.data.Item
+import com.example.inventory.domain.Item
+import com.example.inventory.ui.model.ItemModel
 import com.example.inventory.ui.navigation.ItemDetailsDestination
 import com.example.inventory.ui.theme.InventoryTheme
 
@@ -74,7 +75,7 @@ fun ItemDetailsScreen(
             )
         }, floatingActionButton = {
             FloatingActionButton(
-                onClick = { navigateToEditItem(uiState.value.itemDetails.id) },
+                onClick = { navigateToEditItem(uiState.value.item.id) },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
 
@@ -113,7 +114,7 @@ private fun ItemDetailsBody(
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         ItemDetails(
-            item = itemDetailsUiState.itemDetails.toItem(), modifier = Modifier.fillMaxWidth()
+            item = itemDetailsUiState.item, modifier = Modifier.fillMaxWidth()
         )
         Button(
             onClick = onSellItem,
@@ -146,7 +147,7 @@ private fun ItemDetailsBody(
 
 @Composable
 fun ItemDetails(
-    item: Item, modifier: Modifier = Modifier
+    item: ItemModel, modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(
@@ -182,7 +183,7 @@ fun ItemDetails(
             )
             ItemDetailsRow(
                 labelResID = R.string.price,
-                itemDetail = item.formatedPrice(),
+                itemDetail = item.price,
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(
                         id = R.dimen
@@ -230,8 +231,13 @@ private fun DeleteConfirmationDialog(
 @Composable
 fun ItemDetailsScreenPreview() {
     InventoryTheme {
-        ItemDetailsBody(ItemDetailsUiState(
-            outOfStock = true, itemDetails = ItemDetails(1, "Pen", "$100", "10")
+        ItemDetailsBody(
+            ItemDetailsUiState(Item(
+                    1,
+                    "Pen",
+                    6.25,
+                    0
+                )
         ), onSellItem = {}, onDelete = {})
     }
 }

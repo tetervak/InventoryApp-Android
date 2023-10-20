@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.inventory.ui.item
+package com.example.inventory.ui.item.details
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.inventory.data.ItemsRepository
+import com.example.inventory.data.repository.ItemsRepository
 import com.example.inventory.ui.navigation.ItemDetailsDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,8 +48,8 @@ class ItemDetailsViewModel @Inject constructor(
     val uiState: StateFlow<ItemDetailsUiState> =
         itemsRepository.getItemStream(itemId)
             .filterNotNull()
-            .map {
-                ItemDetailsUiState(outOfStock = it.quantity <= 0, itemDetails = it.toItemDetails())
+            .map { item ->
+                ItemDetailsUiState(item)
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -61,9 +61,9 @@ class ItemDetailsViewModel @Inject constructor(
      */
     fun reduceQuantityByOne() {
         viewModelScope.launch {
-            val currentItem = uiState.value.itemDetails.toItem()
+            val currentItem = uiState.value.item
             if (currentItem.quantity > 0) {
-                itemsRepository.updateItem(currentItem.copy(quantity = currentItem.quantity - 1))
+                itemsRepository.updateItemQuantity(currentItem.id, currentItem.quantity - 1)
             }
         }
     }
@@ -72,7 +72,7 @@ class ItemDetailsViewModel @Inject constructor(
      * Deletes the item from the [ItemsRepository]'s data source.
      */
     fun deleteItem() = viewModelScope.launch{
-        itemsRepository.deleteItem(uiState.value.itemDetails.toItem())
+        itemsRepository.deleteItemById(uiState.value.item.id)
     }
 
     companion object {

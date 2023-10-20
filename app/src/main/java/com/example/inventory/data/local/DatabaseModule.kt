@@ -1,4 +1,4 @@
-package com.example.inventory.data
+package com.example.inventory.data.local
 
 import android.content.Context
 import androidx.room.Room

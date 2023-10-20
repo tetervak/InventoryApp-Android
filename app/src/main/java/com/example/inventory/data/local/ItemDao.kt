@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory.data
+package com.example.inventory.data.local
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -31,19 +31,25 @@ import kotlinx.coroutines.flow.Flow
 interface ItemDao {
 
     @Query("SELECT * from items ORDER BY name ASC")
-    fun getAllItems(): Flow<List<Item>>
+    fun getAllItemsStream(): Flow<List<LocalItem>>
 
     @Query("SELECT * from items WHERE id = :id")
-    fun getItem(id: Int): Flow<Item>
+    fun getItemStream(id: Int): Flow<LocalItem?>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(item: Item)
+    suspend fun insertItem(item: LocalItem)
 
     @Update
-    suspend fun update(item: Item)
+    suspend fun updateItem(item: LocalItem)
+
+    @Query("UPDATE items SET quantity = :quantity WHERE id = :id")
+    suspend fun updateItemQuantity(id: Int, quantity: Int)
 
     @Delete
-    suspend fun delete(item: Item)
+    suspend fun deleteItem(item: LocalItem)
+
+    @Query("DELETE FROM items WHERE id = :id")
+    suspend fun deleteItemById(id: Int)
 }

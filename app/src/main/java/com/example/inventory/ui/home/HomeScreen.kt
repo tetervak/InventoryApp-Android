@@ -51,15 +51,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
-import com.example.inventory.data.Item
-import com.example.inventory.ui.item.formatedPrice
-import com.example.inventory.ui.navigation.NavigationDestination
+import com.example.inventory.domain.Item
+import com.example.inventory.ui.model.ItemModel
+import com.example.inventory.ui.model.toItemModel
+import com.example.inventory.ui.navigation.HomeDestination
 import com.example.inventory.ui.theme.InventoryTheme
-
-object HomeDestination : NavigationDestination {
-    override val route = "home"
-    override val titleRes = R.string.app_name
-}
 
 /**
  * Entry route for Home screen
@@ -110,7 +106,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeBody(
-    itemList: List<Item>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier
+    itemList: List<ItemModel>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -125,7 +121,7 @@ private fun HomeBody(
         } else {
             InventoryList(
                 itemList = itemList,
-                onItemClick = { onItemClick(it.id) },
+                onItemClick = onItemClick,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
@@ -134,21 +130,23 @@ private fun HomeBody(
 
 @Composable
 private fun InventoryList(
-    itemList: List<Item>, onItemClick: (Item) -> Unit, modifier: Modifier = Modifier
+    itemList: List<ItemModel>,
+    onItemClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         items(items = itemList, key = { it.id }) { item ->
             InventoryItem(item = item,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
-                    .clickable { onItemClick(item) })
+                    .clickable { onItemClick(item.id) })
         }
     }
 }
 
 @Composable
 private fun InventoryItem(
-    item: Item, modifier: Modifier = Modifier
+    item: ItemModel, modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -166,7 +164,7 @@ private fun InventoryItem(
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = item.formatedPrice(),
+                    text = item.price,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -183,7 +181,9 @@ private fun InventoryItem(
 fun HomeBodyPreview() {
     InventoryTheme {
         HomeBody(listOf(
-            Item(1, "Game", 100.0, 20), Item(2, "Pen", 200.0, 30), Item(3, "TV", 300.0, 50)
+            Item(1, "Game", 100.0, 20).toItemModel(),
+            Item(2, "Pen", 200.0, 30).toItemModel(),
+            Item(3, "TV", 300.0, 50).toItemModel()
         ), onItemClick = {})
     }
 }
@@ -201,7 +201,7 @@ fun HomeBodyEmptyListPreview() {
 fun InventoryItemPreview() {
     InventoryTheme {
         InventoryItem(
-            Item(1, "Game", 100.0, 20),
+            Item(1, "Game", 100.0, 20).toItemModel(),
         )
     }
 }
