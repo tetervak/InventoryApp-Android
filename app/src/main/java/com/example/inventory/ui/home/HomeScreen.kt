@@ -49,7 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.inventory.InventoryTopAppBar
+import com.example.inventory.ui.common.InventoryTopAppBar
 import com.example.inventory.R
 import com.example.inventory.domain.Item
 import com.example.inventory.ui.model.ItemModel
