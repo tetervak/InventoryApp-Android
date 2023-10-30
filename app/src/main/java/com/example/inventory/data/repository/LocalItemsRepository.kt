@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(DelicateCoroutinesApi::class)
-class OfflineItemsRepository(
+class LocalItemsRepository(
     private val itemDao: ItemDao,
     private val externalScope: CoroutineScope,
     private val dispatcher: CoroutineDispatcher
