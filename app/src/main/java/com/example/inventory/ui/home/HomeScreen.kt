@@ -65,11 +65,11 @@ import com.example.inventory.ui.theme.InventoryTheme
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
-    navigateToItemUpdate: (Int) -> Unit,
+    navigateToItemDetails: (Int) -> Unit,
     viewModel: HomeViewModel,
     modifier: Modifier = Modifier
 ) {
-    val homeUiState by viewModel.homeUiState.collectAsState()
+    val homeUiState:HomeUiState by viewModel.homeUiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
@@ -96,7 +96,7 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeBody(
             itemList = homeUiState.itemList,
-            onItemClick = navigateToItemUpdate,
+            onItemClick = navigateToItemDetails,
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
