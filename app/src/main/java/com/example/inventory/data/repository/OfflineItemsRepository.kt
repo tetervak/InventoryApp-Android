@@ -61,8 +61,8 @@ class OfflineItemsRepository(
         externalScope.launch(dispatcher) { itemDao.updateItem(item.toLocalItem()) }.join()
     }
 
-    override suspend fun updateItemQuantity(id: Int, quantity: Int) {
-        externalScope.launch(dispatcher) { itemDao.updateItemQuantity(id, quantity) }.join()
+    override suspend fun updateItemQuantityById(id: Int, quantity: Int) {
+        externalScope.launch(dispatcher) { itemDao.updateItemQuantityById(id, quantity) }.join()
     }
 }
 

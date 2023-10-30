@@ -47,7 +47,7 @@ interface ItemsRepository {
      */
     suspend fun updateItem(item: Item)
 
-    suspend fun updateItemQuantity(id: Int, quantity: Int)
+    suspend fun updateItemQuantityById(id: Int, quantity: Int)
 
 
 }

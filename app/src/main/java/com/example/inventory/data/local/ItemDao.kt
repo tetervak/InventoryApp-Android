@@ -45,7 +45,7 @@ interface ItemDao {
     suspend fun updateItem(item: LocalItem)
 
     @Query("UPDATE items SET quantity = :quantity WHERE id = :id")
-    suspend fun updateItemQuantity(id: Int, quantity: Int)
+    suspend fun updateItemQuantityById(id: Int, quantity: Int)
 
     @Delete
     suspend fun deleteItem(item: LocalItem)

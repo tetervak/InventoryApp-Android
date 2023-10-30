@@ -63,7 +63,7 @@ class ItemDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val currentItem = uiState.value.item
             if (currentItem.quantity > 0) {
-                itemsRepository.updateItemQuantity(currentItem.id, currentItem.quantity - 1)
+                itemsRepository.updateItemQuantityById(currentItem.id, currentItem.quantity - 1)
             }
         }
     }
