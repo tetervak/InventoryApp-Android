@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory
+package com.example.inventory.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
@@ -27,7 +27,7 @@ import com.example.inventory.ui.navigation.InventoryNavHost
  */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun InventoryApp(navController: NavHostController = rememberNavController()) {
+fun AppScreen(navController: NavHostController = rememberNavController()) {
     InventoryNavHost(navController = navController)
 }
 
