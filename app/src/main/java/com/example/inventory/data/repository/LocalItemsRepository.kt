@@ -42,8 +42,8 @@ class LocalItemsRepository(
     override fun getAllItemsStream(): Flow<List<Item>> =
         itemDao.getAllItemsStream().map{ list -> list.map { localItem ->  localItem.toItem() }}
 
-    override fun getItemStream(id: Int): Flow<Item?> =
-        itemDao.getItemStream(id).map { localItem -> localItem?.toItem() }
+    override fun getItemByIdStream(id: Int): Flow<Item?> =
+        itemDao.getItemByIdStream(id).map { localItem -> localItem?.toItem() }
 
     override suspend fun insertItem(item: Item) {
         externalScope.launch(dispatcher) { itemDao.insertItem(item.toLocalItem()) }.join()

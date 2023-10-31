@@ -34,7 +34,7 @@ interface ItemDao {
     fun getAllItemsStream(): Flow<List<LocalItem>>
 
     @Query("SELECT * from items WHERE id = :id")
-    fun getItemStream(id: Int): Flow<LocalItem?>
+    fun getItemByIdStream(id: Int): Flow<LocalItem?>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.

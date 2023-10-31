@@ -52,7 +52,7 @@ class ItemEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            uiState = itemsRepository.getItemStream(itemId)
+            uiState = itemsRepository.getItemByIdStream(itemId)
                 .filterNotNull()
                 .first()
                 .toItemFormUiState(isEntryValid = true)

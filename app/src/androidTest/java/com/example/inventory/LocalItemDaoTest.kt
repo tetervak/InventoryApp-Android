@@ -81,7 +81,7 @@ class LocalItemDaoTest {
     @Throws(Exception::class)
     fun daoGetItem_returnsItemFromDB() = runBlocking {
         addOneItemToDb()
-        val item = itemDao.getItemStream(1)
+        val item = itemDao.getItemByIdStream(1)
         assertEquals(item.first(), item1)
     }
 

@@ -46,7 +46,7 @@ class ItemDetailsViewModel @Inject constructor(
      * the UI state.
      */
     val uiState: StateFlow<ItemDetailsUiState> =
-        itemsRepository.getItemStream(itemId)
+        itemsRepository.getItemByIdStream(itemId)
             .filterNotNull()
             .map { item ->
                 ItemDetailsUiState(item)
