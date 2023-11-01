@@ -1,8 +1,8 @@
 package com.example.inventory.ui.item.details
 
 import com.example.inventory.domain.Item
-import com.example.inventory.ui.model.ItemModel
-import com.example.inventory.ui.model.toItemModel
+import com.example.inventory.ui.model.ItemDetailsModel
+import com.example.inventory.ui.model.toItemDetailsModel
 
 
 /**
@@ -10,11 +10,11 @@ import com.example.inventory.ui.model.toItemModel
  */
 data class ItemDetailsUiState(
     val outOfStock: Boolean,
-    val item: ItemModel
+    val item: ItemDetailsModel
 ){
     constructor(item: Item): this (
         outOfStock = item.quantity <= 0,
-        item = item.toItemModel()
+        item = item.toItemDetailsModel()
     )
 
     constructor(): this(Item())

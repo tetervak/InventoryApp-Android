@@ -53,7 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.inventory.ui.common.InventoryTopAppBar
 import com.example.inventory.R
 import com.example.inventory.domain.Item
-import com.example.inventory.ui.model.ItemModel
+import com.example.inventory.ui.model.ItemDetailsModel
 import com.example.inventory.ui.navigation.ItemDetailsDestination
 import com.example.inventory.ui.theme.InventoryTheme
 
@@ -147,7 +147,7 @@ private fun ItemDetailsBody(
 
 @Composable
 fun ItemDetails(
-    item: ItemModel, modifier: Modifier = Modifier
+    item: ItemDetailsModel, modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(

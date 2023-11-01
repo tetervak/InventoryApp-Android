@@ -1,27 +1,26 @@
 package com.example.inventory.ui.model
 
 import com.example.inventory.domain.Item
-import java.text.NumberFormat
+import com.example.inventory.ui.common.formatCurrency
 
-data class ItemModel(
+data class ListItemModel(
     val id: Int,
     val name: String,
     val price: String,
-    val quantity: Int
+    val quantity: Int,
+    val selected: Boolean
 ){
     constructor(item: Item): this(
         id = item.id,
         name = item.name,
         price = formatCurrency(item.price),
-        quantity = item.quantity
+        quantity = item.quantity,
+        selected = item.selected
     )
 
     constructor(): this(Item())
 }
 
-private fun formatCurrency(value: Double): String =
-    NumberFormat.getCurrencyInstance().format(value)
-
-fun Item.toItemModel() = ItemModel(this)
+fun Item.toListItemModel() = ListItemModel(this)
 
 

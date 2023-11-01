@@ -19,12 +19,14 @@ package com.example.inventory.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventory.data.repository.ItemsRepository
-import com.example.inventory.ui.model.toItemModel
+import com.example.inventory.ui.model.ListItemModel
+import com.example.inventory.ui.model.toListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -32,7 +34,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    itemsRepository: ItemsRepository
+    private val itemsRepository: ItemsRepository
 ) : ViewModel() {
 
     /**
@@ -41,12 +43,18 @@ class HomeViewModel @Inject constructor(
      */
     val homeUiState: StateFlow<HomeUiState> =
         itemsRepository.getAllItemsStream()
-            .map { list -> HomeUiState(list.map { item -> item.toItemModel() }) }
+            .map { list -> HomeUiState(list.map { item -> item.toListItemModel() }) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = HomeUiState()
             )
+
+    fun toggleSelect(item: ListItemModel) {
+        viewModelScope.launch {
+                itemsRepository.updateItemSelectedById(item.id, !item.selected)
+        }
+    }
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L

@@ -69,18 +69,24 @@ class LocalItemsRepository(
     override suspend fun updateItemQuantityById(id: Int, quantity: Int) {
         externalScope.launch(dispatcher) { itemDao.updateItemQuantityById(id, quantity) }.join()
     }
+
+    override suspend fun updateItemSelectedById(id: Int, selected: Boolean) {
+        externalScope.launch(dispatcher) { itemDao.updateItemSelectedById(id, selected) }.join()
+    }
 }
 
 fun LocalItem.toItem(): Item = Item(
     id = this.id,
     name = this.name,
     price = this.price,
-    quantity = this.quantity
+    quantity = this.quantity,
+    selected = this.selected
 )
 
 fun Item.toLocalItem(): LocalItem = LocalItem(
     id = this.id,
     name = this.name,
     price = this.price,
-    quantity = this.quantity
+    quantity = this.quantity,
+    selected = this.selected
 )

@@ -31,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -52,8 +53,8 @@ import androidx.compose.ui.unit.dp
 import com.example.inventory.ui.common.InventoryTopAppBar
 import com.example.inventory.R
 import com.example.inventory.domain.Item
-import com.example.inventory.ui.model.ItemModel
-import com.example.inventory.ui.model.toItemModel
+import com.example.inventory.ui.model.ListItemModel
+import com.example.inventory.ui.model.toListItemModel
 import com.example.inventory.ui.navigation.HomeDestination
 import com.example.inventory.ui.theme.InventoryTheme
 
@@ -97,6 +98,7 @@ fun HomeScreen(
         HomeBody(
             itemList = homeUiState.itemList,
             onItemClick = navigateToItemDetails,
+            onToggleSelect = viewModel::toggleSelect,
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -106,7 +108,10 @@ fun HomeScreen(
 
 @Composable
 private fun HomeBody(
-    itemList: List<ItemModel>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier
+    itemList: List<ListItemModel>,
+    onItemClick: (Int) -> Unit,
+    onToggleSelect: (ListItemModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,6 +127,7 @@ private fun HomeBody(
             InventoryList(
                 itemList = itemList,
                 onItemClick = onItemClick,
+                onToggleSelect = onToggleSelect,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
@@ -130,13 +136,16 @@ private fun HomeBody(
 
 @Composable
 private fun InventoryList(
-    itemList: List<ItemModel>,
+    itemList: List<ListItemModel>,
     onItemClick: (Int) -> Unit,
+    onToggleSelect: (ListItemModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         items(items = itemList, key = { it.id }) { item ->
-            InventoryItem(item = item,
+            InventoryItem(
+                item = item,
+                onToggleSelect = onToggleSelect,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
                     .clickable { onItemClick(item.id) })
@@ -146,33 +155,42 @@ private fun InventoryList(
 
 @Composable
 private fun InventoryItem(
-    item: ItemModel, modifier: Modifier = Modifier
+    item: ListItemModel,
+    onToggleSelect: (ListItemModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
+        Row(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Checkbox(checked = item.selected, onCheckedChange = { onToggleSelect(item)})
+            Column(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            ){
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = item.price,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
                 Text(
-                    text = item.name,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Spacer(Modifier.weight(1f))
-                Text(
-                    text = item.price,
+                    text = stringResource(R.string.in_stock, item.quantity),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-            Text(
-                text = stringResource(R.string.in_stock, item.quantity),
-                style = MaterialTheme.typography.titleMedium
-            )
         }
+
     }
 }
 
@@ -181,10 +199,10 @@ private fun InventoryItem(
 fun HomeBodyPreview() {
     InventoryTheme {
         HomeBody(listOf(
-            Item(1, "Game", 100.0, 20).toItemModel(),
-            Item(2, "Pen", 200.0, 30).toItemModel(),
-            Item(3, "TV", 300.0, 50).toItemModel()
-        ), onItemClick = {})
+            Item(1, "Game", 100.0, 20).toListItemModel(),
+            Item(2, "Pen", 200.0, 30, true).toListItemModel(),
+            Item(3, "TV", 300.0, 50).toListItemModel()
+        ), onItemClick = {}, onToggleSelect = {})
     }
 }
 
@@ -192,7 +210,7 @@ fun HomeBodyPreview() {
 @Composable
 fun HomeBodyEmptyListPreview() {
     InventoryTheme {
-        HomeBody(listOf(), onItemClick = {})
+        HomeBody(listOf(), onItemClick = {}, onToggleSelect = {})
     }
 }
 
@@ -201,7 +219,8 @@ fun HomeBodyEmptyListPreview() {
 fun InventoryItemPreview() {
     InventoryTheme {
         InventoryItem(
-            Item(1, "Game", 100.0, 20).toItemModel(),
+            Item(1, "Game", 100.0, 20).toListItemModel(),
+            onToggleSelect = {}
         )
     }
 }

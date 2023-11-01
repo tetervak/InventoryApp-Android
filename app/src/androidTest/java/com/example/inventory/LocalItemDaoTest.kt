@@ -38,8 +38,8 @@ class LocalItemDaoTest {
 
     private lateinit var itemDao: ItemDao
     private lateinit var inventoryDatabase: InventoryDatabase
-    private val item1 = LocalItem(1, "Apples", 10.0, 20)
-    private val item2 = LocalItem(2, "Bananas", 15.0, 97)
+    private val item1 = LocalItem(1, "Apples", 10.0, 20, false)
+    private val item2 = LocalItem(2, "Bananas", 15.0, 97, false)
 
     @Before
     fun createDb() {
@@ -99,12 +99,12 @@ class LocalItemDaoTest {
     @Throws(Exception::class)
     fun daoUpdateItems_updatesItemsInDB() = runBlocking {
         addTwoItemsToDb()
-        itemDao.updateItem(LocalItem(1, "Apples", 15.0, 25))
-        itemDao.updateItem(LocalItem(2, "Bananas", 5.0, 50))
+        itemDao.updateItem(LocalItem(1, "Apples", 15.0, 25, true))
+        itemDao.updateItem(LocalItem(2, "Bananas", 5.0, 50, false))
 
         val allItems = itemDao.getAllItemsStream().first()
-        assertEquals(allItems[0], LocalItem(1, "Apples", 15.0, 25))
-        assertEquals(allItems[1], LocalItem(2, "Bananas", 5.0, 50))
+        assertEquals(allItems[0], LocalItem(1, "Apples", 15.0, 25, true))
+        assertEquals(allItems[1], LocalItem(2, "Bananas", 5.0, 50, false))
     }
 
     private suspend fun addOneItemToDb() {

@@ -49,5 +49,7 @@ interface ItemsRepository {
 
     suspend fun updateItemQuantityById(id: Int, quantity: Int)
 
+    suspend fun updateItemSelectedById(id: Int, selected: Boolean)
+
 
 }
