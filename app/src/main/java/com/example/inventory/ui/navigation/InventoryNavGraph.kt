@@ -50,8 +50,8 @@ fun InventoryNavHost(
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
                 navigateToItemEntry = { navController.navigate(ItemEntryDestination.route) },
-                navigateToItemDetails = {
-                    navController.navigate("${ItemDetailsDestination.route}/${it}")
+                navigateToItemDetails = { id->
+                    navController.navigate("${ItemDetailsDestination.route}/${id}")
                 },
                 viewModel = viewModel
             )

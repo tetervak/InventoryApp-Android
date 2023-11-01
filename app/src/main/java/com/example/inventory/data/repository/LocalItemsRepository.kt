@@ -25,6 +25,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,10 +41,14 @@ class LocalItemsRepository(
     constructor(itemDao: ItemDao) : this(itemDao, GlobalScope, Dispatchers.IO)
 
     override fun getAllItemsStream(): Flow<List<Item>> =
-        itemDao.getAllItemsStream().map{ list -> list.map { localItem ->  localItem.toItem() }}
+        itemDao.getAllItemsStream()
+            .map{ list -> list.map { localItem ->  localItem.toItem() }}.
+            flowOn(dispatcher)
 
     override fun getItemByIdStream(id: Int): Flow<Item?> =
-        itemDao.getItemByIdStream(id).map { localItem -> localItem?.toItem() }
+        itemDao.getItemByIdStream(id)
+            .map { localItem -> localItem?.toItem() }
+            .flowOn(dispatcher)
 
     override suspend fun insertItem(item: Item) {
         externalScope.launch(dispatcher) { itemDao.insertItem(item.toLocalItem()) }.join()
