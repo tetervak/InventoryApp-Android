@@ -42,8 +42,8 @@ class LocalItemsRepository(
 
     override fun getAllItemsStream(): Flow<List<Item>> =
         itemDao.getAllItemsStream()
-            .map{ list -> list.map { localItem ->  localItem.toItem() }}.
-            flowOn(dispatcher)
+            .map{ list -> list.map { localItem ->  localItem.toItem() }}
+            .flowOn(dispatcher)
 
     override fun getItemByIdStream(id: Int): Flow<Item?> =
         itemDao.getItemByIdStream(id)
