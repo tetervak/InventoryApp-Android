@@ -12,12 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.inventory.R
-import com.example.inventory.ui.model.ItemFormModel
 
 @Composable
 fun ItemFormBody(
     itemFormUiState: ItemFormUiState,
-    onItemValueChange: (ItemFormModel) -> Unit,
+    onNameChange: (String) -> Unit,
+    onPriceChange: (String) -> Unit,
+    onQuantityChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -27,7 +28,9 @@ fun ItemFormBody(
     ) {
         ItemForm(
             itemFormModel = itemFormUiState.itemFormModel,
-            onValueChange = onItemValueChange,
+            onNameChange = onNameChange,
+            onPriceChange = onPriceChange,
+            onQuantityChange = onQuantityChange,
             modifier = Modifier.fillMaxWidth()
         )
         Button(

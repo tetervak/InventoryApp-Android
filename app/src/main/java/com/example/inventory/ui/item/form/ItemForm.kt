@@ -22,7 +22,9 @@ import java.util.Locale
 fun ItemForm(
     itemFormModel: ItemFormModel,
     modifier: Modifier = Modifier,
-    onValueChange: (ItemFormModel) -> Unit = {},
+    onNameChange: (String) -> Unit,
+    onPriceChange: (String) -> Unit,
+    onQuantityChange: (String) -> Unit,
     enabled: Boolean = true
 ) {
     Column(
@@ -31,7 +33,7 @@ fun ItemForm(
     ) {
         OutlinedTextField(
             value = itemFormModel.name,
-            onValueChange = { onValueChange(itemFormModel.copy(name = it)) },
+            onValueChange = onNameChange,
             label = { Text(stringResource(R.string.item_name_req)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -44,7 +46,7 @@ fun ItemForm(
         )
         OutlinedTextField(
             value = itemFormModel.price,
-            onValueChange = { onValueChange(itemFormModel.copy(price = it)) },
+            onValueChange = onPriceChange,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             label = { Text(stringResource(R.string.item_price_req)) },
             colors = OutlinedTextFieldDefaults.colors(
@@ -59,7 +61,7 @@ fun ItemForm(
         )
         OutlinedTextField(
             value = itemFormModel.quantity,
-            onValueChange = { onValueChange(itemFormModel.copy(quantity = it)) },
+            onValueChange = onQuantityChange,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = { Text(stringResource(R.string.quantity_req)) },
             colors = OutlinedTextFieldDefaults.colors(

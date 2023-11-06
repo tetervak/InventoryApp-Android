@@ -52,7 +52,9 @@ fun ItemEntryScreen(
     ) { innerPadding ->
         ItemFormBody(
             itemFormUiState = viewModel.uiState,
-            onItemValueChange = viewModel::updateUiState,
+            onNameChange = viewModel::onNameChange,
+            onPriceChange = viewModel::onPriceChange,
+            onQuantityChange = viewModel::onQuantityChange,
             onSaveClick = {
                 viewModel.saveItem()
                 navigateBack()
@@ -69,10 +71,14 @@ fun ItemEntryScreen(
 @Composable
 private fun ItemEntryScreenPreview() {
     InventoryTheme {
-        ItemFormBody(itemFormUiState = ItemFormUiState(
-            ItemFormModel(
-                name = "Item name", price = "10.00", quantity = "5"
-            )
-        ), onItemValueChange = {}, onSaveClick = {})
+        ItemFormBody(
+            itemFormUiState = ItemFormUiState(
+                ItemFormModel(
+                    name = "Item name", price = "10.00", quantity = "5"
+                )
+            ),
+            onNameChange = {}, onPriceChange = {}, onQuantityChange = {},
+            onSaveClick = {}
+        )
     }
 }

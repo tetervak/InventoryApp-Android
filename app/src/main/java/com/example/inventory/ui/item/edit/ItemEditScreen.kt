@@ -46,7 +46,9 @@ fun ItemEditScreen(
     ) { innerPadding ->
         ItemFormBody(
             itemFormUiState = viewModel.uiState,
-            onItemValueChange = viewModel::updateUiState,
+            onNameChange = viewModel::onNameChange,
+            onPriceChange = viewModel::onPriceChange,
+            onQuantityChange = viewModel::onQuantityChange,
             onSaveClick = {
                 viewModel.updateItem()
                 navigateBack()

@@ -16,15 +16,10 @@
 
 package com.example.inventory.ui.item.entry
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventory.data.local.LocalItem
 import com.example.inventory.data.repository.ItemsRepository
-import com.example.inventory.ui.model.ItemFormModel
-import com.example.inventory.ui.item.form.ItemFormUiState
+import com.example.inventory.ui.item.form.FormViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,20 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ItemEntryViewModel @Inject constructor(
     private val itemsRepository: ItemsRepository
-) : ViewModel() {
-
-    /**
-     * Holds current item ui state
-     */
-    var uiState by mutableStateOf(ItemFormUiState())
-        private set
-
-    fun updateUiState(itemFormModel: ItemFormModel) {
-        uiState =
-            ItemFormUiState(
-                itemFormModel = itemFormModel,
-                isEntryValid = itemFormModel.isValid())
-    }
+) : FormViewModel() {
 
     /**
      * Inserts an [LocalItem] in the Room database

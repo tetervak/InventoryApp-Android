@@ -16,15 +16,11 @@
 
 package com.example.inventory.ui.item.edit
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventory.data.repository.ItemsRepository
+import com.example.inventory.ui.item.form.FormViewModel
 import com.example.inventory.ui.model.ItemFormModel
-import com.example.inventory.ui.item.form.ItemFormUiState
 import com.example.inventory.ui.item.form.toItemFormUiState
 import com.example.inventory.ui.navigation.ItemEditDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,13 +36,7 @@ import javax.inject.Inject
 class ItemEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val itemsRepository: ItemsRepository
-) : ViewModel() {
-
-    /**
-     * Holds current item ui state
-     */
-    var uiState: ItemFormUiState by mutableStateOf(ItemFormUiState())
-        private set
+) : FormViewModel() {
 
     private val itemId: Int = checkNotNull(savedStateHandle[ItemEditDestination.itemIdArg])
 
@@ -67,17 +57,5 @@ class ItemEditViewModel @Inject constructor(
         if (formData.isValid()) {
             itemsRepository.updateItem(formData.toItem())
         }
-    }
-
-    /**
-     * Updates the [uiState] with the value provided in the argument. This method also triggers
-     * a validation for input values.
-     */
-    fun updateUiState(itemFormModel: ItemFormModel) {
-        uiState =
-            ItemFormUiState(
-                itemFormModel = itemFormModel,
-                isEntryValid = itemFormModel.isValid()
-            )
     }
 }
