@@ -112,7 +112,7 @@ private fun ItemDetailsBody(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
-        var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
+        var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }
         ItemDetails(
             item = itemDetailsUiState.item, modifier = Modifier.fillMaxWidth()
         )
@@ -125,19 +125,19 @@ private fun ItemDetailsBody(
             Text(stringResource(R.string.sell))
         }
         OutlinedButton(
-            onClick = { deleteConfirmationRequired = true },
+            onClick = { showConfirmationDialog = true },
             shape = MaterialTheme.shapes.small,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.delete))
         }
-        if (deleteConfirmationRequired) {
+        if (showConfirmationDialog) {
             DeleteConfirmationDialog(
                 onDeleteConfirm = {
-                    deleteConfirmationRequired = false
+                    showConfirmationDialog = false
                     onDelete()
                 },
-                onDeleteCancel = { deleteConfirmationRequired = false },
+                onDeleteCancel = { showConfirmationDialog = false },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
             )
         }
